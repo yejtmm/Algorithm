@@ -1,3 +1,4 @@
+import RecursionAndDynamicProgramming.two.MatrixPathSum;
 import stackAndQueue.eight.SingleStack;
 
 /**
@@ -5,20 +6,10 @@ import stackAndQueue.eight.SingleStack;
  */
 public class MainMethod {
     public static void main(String[] args) {
-//        Stack<Integer> stack = new Stack<>();
-//        stack.push(1);
-//        stack.push(2);
-//        stack.push(3);
-//        stack.push(4);
-//        stack.push(5);
-//       reverseStack.reverse(stack);
-//       stack.stream().forEach(a -> {
-//           System.out.println(a);
-//       });
-        SingleStack singleStack = new SingleStack();
-        int[][] ints = singleStack.rightWay(new int[]{3, 4, 1, 5, 6, 2, 7});
-        int[][] ints2 = singleStack.getNearLessNoRepeat(new int[]{3, 4, 1, 5, 6, 2, 7});
-        int[][] ints3 = singleStack.getNearLess(new int[]{3, 4, 1, 5, 6, 2, 7});
+        MatrixPathSum matrixPathSum = new MatrixPathSum();
+        int [] [] m = {{1,3,5,9,0}, {8,1,3,4,0},{5,0,6,1,0},{8,8,4,0,0}};
+        int sum2 = matrixPathSum.minPathSum2(m);
+        System.out.println(sum2);
 
     }
 }

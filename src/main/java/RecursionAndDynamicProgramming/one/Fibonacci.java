@@ -1,4 +1,4 @@
-package RecursionAndDynamicProgramming;
+package RecursionAndDynamicProgramming.one;
 
 /**
 
@@ -170,6 +170,145 @@ public class Fibonacci {
      所以，类似斐波那契数列，唯一的不同就是初始项不同。可以很轻易地写出O（2N）与O（N）的方法，
      */
 
+    public int s1(int n){
+        if(n < 1){
+            return 0;
+        }
+        if (n == 1 || n == 2){
+            return n;
+        }
+        return s1(n - 1) + s1(n - 2);
+    }
 
+    public int s2(int n){
+        if (n < 1){
+            return 0;
+        }
+        if (n == 1 || n == 2){
+            return n;
+        }
+        int res = 2;
+        int pre = 1;
+        int tmp = 0;
+        for (int i = 3; i <= n; i++){
+            tmp = res;
+            res = res + pre;
+            pre = tmp;
+        }
+        return res;
+    }
+
+    /**
+     O（logN）的方法。表达式 S（n）=S（n-1）+S（n-2）是一个二阶递推数列，同样，用上文矩阵乘法的方法，
+     根据前4项S（1）==1，S（2）==2，S（3）==3，S（4）==5，求出状态矩阵：
+                |        |       |      |
+                | a    b |       | 1  1 |
+                |        |    =  |      |
+                | c    d |       | 1  0 |
+                |        |       |      |
+
+     根据上文过程得到：
+                                                 | 1  1 |n-2             | 1  1 |n-2
+                (S(n),S(n - 1)) = (S(2),S(1)) *  |      |     = (2, 1) * |      |
+                                                 | 1  0 |                | 1  0 |
+
+     全部实现见 S3
+     */
+    public int s3(int n){
+        if (n < 1){
+            return 0;
+        }
+        if(n == 1 || n == 2){
+            return n;
+        }
+        int [] [] base = { {1, 1}, {1, 0}};
+        int [] [] res = matrixPower(base, n - 2);
+        return 2 * res[0][0] + res[1][0];
+    }
+
+    /**
+     补充问题2。所有的牛都不会死，所以第N-1年的牛会毫无损失地活到第N年。
+     同时所有成熟的牛都会生1头新的牛，那么成熟牛的数量如何估计？
+     就是第N-3年的所有牛，到第N年肯定都是成熟的牛，其间出生的牛肯定都没有成熟。
+     所以C（n）=C（n-1）+C（n-3），初始项为C（1）==1，C（2）==2，C（3）==3。
+     这个和斐波那契数列又十分类似，只不过C（n）依赖C（n-1）和C（n-3）的值，
+     而斐波那契数列 F（n）依赖 F（n-1）和 F（n-2）的值。
+     同样可以轻易地写出 O（2N）与 O（N）的方法，请参看如下代码中的c1和c2方法。
+     */
+
+    public int c1(int n){
+        if(n < 1){
+            return 0;
+        }
+        if(n == 1 || n == 2 || n == 3){
+            return n;
+        }
+        return c1(n - 1) + c1(n - 3);
+    }
+
+    public int c2(int n){
+        if(n < 1){
+            return 0;
+        }
+        if(n == 1 || n == 2 || n == 3){
+            return n;
+        }
+        int res = 3;
+        int pre = 2;
+        int prepre = 1;
+        int tmp1 = 0;
+        int tmp2 = 0;
+        for (int i = 4; i <= n; i++){
+            tmp1 = res;
+            tmp2 = pre;
+            res = res + prepre;
+            pre = tmp1;
+            prepre = tmp2;
+        }
+        return res;
+    }
+
+    /**
+
+     O（logN）的方法。C（n）=C（n-1）+C（n-3）是一个三阶递推数列，一定可以用矩阵乘法的形式表示，
+     且状态矩阵为3×3的矩阵。
+                                           | 1 1 0 |n-3    | 1 1 0 |n-3
+        ( Cn, Cn-1,Cn-2) = ( C3, C2, C1) × | 0 0 1 |    =  | 0 0 1 |
+                                           | 1 0 0 |       | 1 0 0 |
+
+     把前5项C（1）==1，C（2）==2，C（3）==3，C（4）==4，C（5）==6代入，求出状态矩阵
+
+                   | a b c |    | 1 1 0 |
+                   | d e f | =  | 0 0 1 |
+                   | g h i |    | 1 0 0 |
+
+     求矩阵之后，当n>3时，原来的公式可化简为：
+                                         | 1 1 0 |n-3                | 1 1 0 |n-3
+     ( Cn, Cn-1,Cn-2) = ( C3, C2, C1) ×  | 0 0 1 |    =  (3, 2, 1) * | 0 0 1 |
+                                         | 1 0 0 |                   | 1 0 0 |
+
+     接下来的过程又是利用加速矩阵乘法的方式进行实现。
+     */
+
+    public int C3(int n){
+
+        if(n < 1){
+            return 0;
+        }
+        if(n == 1 || n == 2 || n == 3){
+            return n;
+        }
+        int [] [] base = {{1,1,0},{0,0,1},{1,0,0}};
+        int [] [] res = matrixPower(base, n - 3);
+        return 3 * res[0][0] + 2 * res[1][0] + res[2][0];
+    }
+
+
+    /**
+
+     如果递归式严格符合F（n）=a×F（n-1）+b×F（n-2）+...+k×F（n-i），那么它就是一个i阶的递推式，
+     必然有与i×i的状态矩阵有关的矩阵乘法的表达。一律可以用加速矩阵乘法的动态规划将时间复杂度降为O（logN）。
+
+     */
 
 }
