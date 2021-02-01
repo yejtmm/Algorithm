@@ -1,4 +1,4 @@
-package ArraysAndMatrices;
+package ArraysAndMatrices.one;
 
 /**
  转圈打印矩阵
